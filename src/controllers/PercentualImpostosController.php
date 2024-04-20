@@ -1,10 +1,12 @@
 <?php
 class PercentualImpostoController {
+    private $table;
     private static $instance;
-    private $db;
+    private $percentualImpostoRepository;
 
-    private function __construct() {
-        $this->db = Database::getInstance()->getConnection();
+    public function __construct() {
+        $this->table = 'percentuais_imposto';
+        $this->percentualImpostoRepository = new PercentualImpostoRepository();
     }
 
     public static function getInstance() {
@@ -15,55 +17,23 @@ class PercentualImpostoController {
     }
 
     public function create($nome, $valor, $tipoProdutoId) {
-        try {
-            $stmt = $this->db->prepare("INSERT INTO percentuais_imposto (nome, valor, tipo_produto_id) VALUES (?, ?, ?)");
-            $stmt->execute([$nome, $valor, $tipoProdutoId]);
-            return $this->db->lastInsertId();
-        } catch (PDOException $e) {
-            echo "Erro ao criar o percentual de imposto: " . $e->getMessage();
-            return false;
-        }
+        return $this->percentualImpostoRepository->create($this->table, ['nome' => $nome, 'valor' => $valor, 'tipo_produto_id' => $tipoProdutoId]);
     }
 
     public function update($id, $nome, $valor, $tipoProdutoId) {
-        try {
-            $stmt = $this->db->prepare("UPDATE percentuais_imposto SET nome = ?, valor = ?, tipo_produto_id = ? WHERE id = ?");
-            $stmt->execute([$nome, $valor, $tipoProdutoId, $id]);
-            return true;
-        } catch (PDOException $e) {
-            echo "Erro ao atualizar o percentual de imposto: " . $e->getMessage();
-            return false;
-        }
+        return $this->percentualImpostoRepository->update($this->table, $id, ['nome' => $nome, 'valor' => $valor, 'tipo_produto_id' => $tipoProdutoId]);
     }
 
     public function list() {
-        try {
-            $stmt = $this->db->query("SELECT * FROM percentuais_imposto");
-            $percentuais = [];
-            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                $percentuais[] = new PercentualImposto($row['id'], $row['nome'], $row['valor'], $row['tipo_produto_id'], $row['created_at'], $row['updated_at'], $row['deleted_at']);
-            }
-            return $percentuais;
-        } catch (PDOException $e) {
-            echo "Erro ao listar os percentuais de imposto: " . $e->getMessage();
-            return [];
-        }
+        return $this->percentualImpostoRepository->list($this->table);
     }
 
     public function show($id) {
-        try {
-            $stmt = $this->db->prepare("SELECT * FROM percentuais_imposto WHERE id = ?");
-            $stmt->execute([$id]);
-            $row = $stmt->fetch(PDO::FETCH_ASSOC);
-            if ($row) {
-                return new PercentualImposto($row['id'], $row['nome'], $row['valor'], $row['tipo_produto_id'], $row['created_at'], $row['updated_at'], $row['deleted_at']);
-            } else {
-                return null; // Percentual de imposto não encontrado
-            }
-        } catch (PDOException $e) {
-            echo "Erro ao obter o percentual de imposto: " . $e->getMessage();
-            return null;
-        }
+        return $this->percentualImpostoRepository->show($this->table, $id);
+    }
+
+    public function delete($id) {
+        return $this->percentualImpostoRepository->delete($this->table, $id);
     }
 }
 

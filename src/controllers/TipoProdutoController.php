@@ -1,10 +1,12 @@
 <?php
 class TipoProdutoController {
+    private $table;
     private static $instance;
-    private $db;
+    private $tipoProdutoRepository;
 
-    private function __construct() {
-        $this->db = Database::getInstance()->getConnection();
+    public function __construct() {
+        $this->table = 'tipos_produto';
+        $this->tipoProdutoRepository = new TipoProdutoRepository();
     }
 
     public static function getInstance() {
@@ -15,42 +17,24 @@ class TipoProdutoController {
     }
 
     public function create($nome) {
-        $stmt = $this->db->prepare("INSERT INTO tipos_produto (nome) VALUES (?)");
-        $stmt->execute([$nome]);
-
-        return $this->db->lastInsertId();
+        return $this->tipoProdutoRepository->create($this->table, ['nome' => $nome]);
     }
 
     public function update($id, $nome) {
-        $stmt = $this->db->prepare("UPDATE tipos_produto SET nome = ? WHERE id = ?");
-        $stmt->execute([$nome, $id]);
-        if ($stmt->rowCount() > 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return $this->tipoProdutoRepository->update($this->table, $id, ['nome' => $nome]);
     }
 
     public function list() {
-        $stmt = $this->db->query("SELECT * FROM tipos_produto WHERE deleted_at IS NULL");
-        $tiposProdutos = [];
-        while ($row = $stmt->fetch()) {
-            $tiposProdutos[] = new TipoProduto($row['id'], $row['nome'], $row['created_at'], $row['updated_at'], $row['deleted_at']);
-        }
-
-        return $tiposProdutos;
+        return $this->tipoProdutoRepository->list($this->table);
     }
 
     public function show($id) {
-        $stmt = $this->db->prepare("SELECT * FROM tipos_produto WHERE id = ?");
-        $stmt->execute([$id]);
-        $row = $stmt->fetch();
+        return $this->tipoProdutoRepository->show($this->table, $id);
+    }
 
-        if ($row) {
-            $tipoProduto = new TipoProduto($row['id'], $row['nome'], $row['created_at'], $row['updated_at'], $row['deleted_at']);
-            return $tipoProduto;
-        } else {
-            return null;
-        }
+    public function delete($id) {
+        return $this->tipoProdutoRepository->delete($this->table, $id);
     }
 }
+
+?>

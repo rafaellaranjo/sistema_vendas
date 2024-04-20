@@ -1,16 +1,18 @@
 <?php
-class Venda {
+class VendaProduto {
     private $id;
-    private $cliente;
-    private $status;
+    private $venda_id;
+    private $produto_id;
+    private $quantidade;
     private $created_at;
     private $updated_at;
     private $deleted_at;
 
-    public function __construct($id, $cliente, $status, $created_at = null, $updated_at = null, $deleted_at = null) {
+    public function __construct($id, $venda_id, $produto_id, $quantidade, $created_at = null, $updated_at = null, $deleted_at = null) {
         $this->id = $id;
-        $this->cliente = $cliente;
-        $this->status = $status;
+        $this->venda_id = $venda_id;
+        $this->produto_id = $produto_id;
+        $this->quantidade = $quantidade;
         $this->created_at = $created_at;
         $this->updated_at = $updated_at;
         $this->deleted_at = $deleted_at;
@@ -20,20 +22,28 @@ class Venda {
         return $this->id;
     }
 
-    public function getCliente() {
-        return $this->cliente;
+    public function getVendaId() {
+        return $this->venda_id;
     }
 
-    public function setCliente($cliente) {
-        $this->cliente = $cliente;
+    public function setVendaId($venda_id) {
+        $this->venda_id = $venda_id;
     }
 
-    public function getStatus() {
-        return $this->status;
+    public function getProdutoId() {
+        return $this->produto_id;
     }
 
-    public function setStatus($status) {
-        $this->status = $status;
+    public function setProdutoId($produto_id) {
+        $this->produto_id = $produto_id;
+    }
+
+    public function getQuantidade() {
+        return $this->quantidade;
+    }
+
+    public function setQuantidade($quantidade) {
+        $this->quantidade = $quantidade;
     }
 
     public function getCreatedAt() {

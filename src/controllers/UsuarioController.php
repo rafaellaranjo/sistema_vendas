@@ -1,29 +1,27 @@
 <?php
 class UsuarioController {
+    private $table;
+    private static $instance;
+    private $usuarioRepository;
+
+    public function __construct() {
+        $this->table = 'tipos_produto';
+        $this->usuarioRepository = new UsuarioRepository();
+    }
+
+    public static function getInstance() {
+        if (!self::$instance) {
+            self::$instance = new UsuarioController();
+        }
+        return self::$instance;
+    }
+
     public function registrar($username, $password) {
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-
-        $db = Database::getInstance();
-        $conn = $db->getConnection();
-
-        $stmt = $conn->prepare("INSERT INTO usuarios (username, password) VALUES (?, ?)");
-        $stmt->execute([$username, $hashedPassword]);
-
-        return $conn->lastInsertId();
+        return $this->usuarioRepository->create($this->table, ['username' => $username, 'password' => $hashedPassword]);
     }
 
     public function login($username, $password) {
-        $db = Database::getInstance();
-        $conn = $db->getConnection();
-
-        $stmt = $conn->prepare("SELECT * FROM usuarios WHERE username = ?");
-        $stmt->execute([$username]);
-        $user = $stmt->fetch();
-
-        if ($user && password_verify($password, $user['password'])) {
-            return $user['id'];
-        } else {
-            return false;
-        }
+        return $this->usuarioRepository->login($username, $password);
     }
 }

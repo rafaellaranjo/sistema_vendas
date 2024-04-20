@@ -1,7 +1,7 @@
 <?php
 class UsuarioRoutes {
     public static function route_registrar() {
-        $usuarioController = new UsuarioController();
+        $usuarioController = UsuarioController::getInstance();
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
@@ -23,7 +23,7 @@ class UsuarioRoutes {
     }
 
     public static function route_login() {
-        $usuarioController = new UsuarioController();
+        $usuarioController = UsuarioController::getInstance();
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 

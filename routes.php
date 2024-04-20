@@ -14,53 +14,46 @@ class Routes {
     }
 
     private function execute() {
-        if ($this->path == '/venda') {
-            $vendaController = new VendaController();
-            $vendaController->exibirFormulario();
-        } elseif ($this->path == '/processar_venda') {
-            $vendaController = new VendaController();
-            $vendaController->processarVenda();
-        } elseif ($this->path == '/produtos') {
-            $produtoController = new ProdutoController();
-            $produtoController->exibirLista();
-        } elseif (strstr($this->path, '/percentual_impostos')) {
-            if ($this->method  === 'POST') {
-                PercentualImpostoRoutes::create();
+        $routes = [
+            '/venda' => 'VendaRoutes',
+            '/venda_produtos' => 'VendaProdutosController',
+            '/produtos' => 'ProdutoRoutes',
+            '/percentual_impostos' => 'PercentualImpostoRoutes',
+            '/tipos_produto' => 'TipoProdutoRoutes',
+            '/register' => 'UsuarioRoutes',
+            '/login' => 'UsuarioRoutes'
+        ];
 
-            } elseif ($this->method === 'GET') {
-                
-                if (isset($_GET['id'])) {
-                    PercentualImpostoRoutes::show();
+        if (isset($routes[$this->path])) {
+            $controller = $routes[$this->path];
+            $instance = $controller::getInstance();
 
-                } else {
-                    PercentualImpostoRoutes::list();
-
-                }
-            } elseif ($this->method  === 'PUT') {
-                PercentualImpostoRoutes::update();
+            switch ($this->method) {
+                case 'POST':
+                    $instance->create();
+                    break;
+                case 'GET':
+                    if (isset($_GET['id'])) {
+                        $instance->show();
+                    } else {
+                        $instance->list();
+                    }
+                    break;
+                case 'PUT':
+                    $instance->update();
+                    break;
+                case 'DELETE':
+                    $instance->delete();
+                    break;
+                default:
+                    http_response_code(405);
+                    echo json_encode(['error' => 'Método HTTP não suportado']);
+                    break;
             }
-        } elseif (strstr($this->path, '/tipos_produto')) {
-            if ($this->method  === 'POST') {
-                TipoProdutoRoutes::create();
-
-            } elseif ($this->method === 'GET') {
-                
-                if (isset($_GET['id'])) {
-                    TipoProdutoRoutes::show();
-
-                } else {
-                    TipoProdutoRoutes::list();
-
-                }
-            } elseif ($this->method  === 'PUT') {
-                TipoProdutoRoutes::update();
-            }
-        } elseif ($this->path == '/register') {
-            UsuarioRoutes::route_registrar();
-
-        } elseif ($this->path == '/login') {
-            UsuarioRoutes::route_login();
-
+        } else {
+            http_response_code(404);
+            echo json_encode(['error' => 'Rota não encontrada']);
         }
     }
 }
+?>

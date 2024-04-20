@@ -1,5 +1,4 @@
 <?php
-
 class PercentualImpostoRoutes {
     public static function create() {
         if (!isset($_POST['nome']) || !isset($_POST['valor']) || !isset($_POST['tipo_produto_id'])) {
