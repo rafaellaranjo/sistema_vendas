@@ -1,12 +1,13 @@
 <?php
-class TipoProdutoController {
-    private $table;
+class TipoProdutoController extends Controller {
     private static $instance;
     private $tipoProdutoRepository;
+    private $table = 'tipos_produto';
+    private $request_fields = ['nome'];
 
     public function __construct() {
-        $this->table = 'tipos_produto';
         $this->tipoProdutoRepository = new TipoProdutoRepository();
+        parent::__construct($this->tipoProdutoRepository, $this->table, $this->request_fields);
     }
 
     public static function getInstance() {
@@ -14,26 +15,6 @@ class TipoProdutoController {
             self::$instance = new TipoProdutoController();
         }
         return self::$instance;
-    }
-
-    public function create($nome) {
-        return $this->tipoProdutoRepository->create($this->table, ['nome' => $nome]);
-    }
-
-    public function update($id, $nome) {
-        return $this->tipoProdutoRepository->update($this->table, $id, ['nome' => $nome]);
-    }
-
-    public function list() {
-        return $this->tipoProdutoRepository->list($this->table);
-    }
-
-    public function show($id) {
-        return $this->tipoProdutoRepository->show($this->table, $id);
-    }
-
-    public function delete($id) {
-        return $this->tipoProdutoRepository->delete($this->table, $id);
     }
 }
 

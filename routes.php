@@ -5,7 +5,7 @@ class Routes {
 
     private function __construct() {
         $this->method = $_SERVER['REQUEST_METHOD'];
-        $this->path = $_SERVER['REQUEST_URI'];
+        $this->path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
     }
 
     public static function route() {
@@ -15,13 +15,16 @@ class Routes {
 
     private function execute() {
         $routes = [
-            '/venda' => 'VendaRoutes',
+            '/venda' => 'VendaController',
             '/venda_produtos' => 'VendaProdutosController',
-            '/produtos' => 'ProdutoRoutes',
-            '/percentual_impostos' => 'PercentualImpostoRoutes',
-            '/tipos_produto' => 'TipoProdutoRoutes',
-            '/register' => 'UsuarioRoutes',
-            '/login' => 'UsuarioRoutes'
+            '/produtos' => 'ProdutoController',
+            '/percentual_impostos' => 'PercentualImpostoController',
+            '/tipos_produto' => 'TipoProdutoController'
+        ];
+
+        $user_routes = [
+            '/register' => 'registrar',
+            '/login' => 'login'
         ];
 
         if (isset($routes[$this->path])) {
@@ -44,6 +47,19 @@ class Routes {
                     break;
                 case 'DELETE':
                     $instance->delete();
+                    break;
+                default:
+                    http_response_code(405);
+                    echo json_encode(['error' => 'Método HTTP não suportado']);
+                    break;
+            }
+        } else if (isset($user_routes[$this->path])) {
+            $instance = UsuarioController::getInstance();
+            $function = $user_routes[$this->path];
+
+            switch ($this->method) {
+                case 'POST':
+                    $instance->$function();
                     break;
                 default:
                     http_response_code(405);

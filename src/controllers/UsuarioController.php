@@ -5,7 +5,7 @@ class UsuarioController {
     private $usuarioRepository;
 
     public function __construct() {
-        $this->table = 'tipos_produto';
+        $this->table = 'usuarios';
         $this->usuarioRepository = new UsuarioRepository();
     }
 
@@ -16,12 +16,35 @@ class UsuarioController {
         return self::$instance;
     }
 
-    public function registrar($username, $password) {
-        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-        return $this->usuarioRepository->create($this->table, ['username' => $username, 'password' => $hashedPassword]);
+    public function registrar() {
+        if (isset($_POST['username'], $_POST['password'])) {
+            $username = $_POST['username'];
+            $password = $_POST['password'];
+
+            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+            $userId = $this->usuarioRepository->create($this->table, ['username' => $username, 'password' => $hashedPassword]);
+
+            echo json_encode(['user_id' => $userId]);
+        } else {
+
+            echo json_encode(['error' => 'Campos inválidos']);
+        }
     }
 
-    public function login($username, $password) {
-        return $this->usuarioRepository->login($username, $password);
+    public function login() {
+        if (isset($_POST['username'], $_POST['password'])) {
+            $username = $_POST['username'];
+            $password = $_POST['password'];
+
+            $userId = $this->usuarioRepository->login($username, $password);
+
+            if ($userId) {
+                echo json_encode(['user_id' => $userId]);
+            } else {
+                echo json_encode(['error' => 'Nome de usuário ou senha incorretos']);
+            }
+        } else {
+            echo json_encode(['error' => 'Campos inválidos']);
+        }
     }
 }

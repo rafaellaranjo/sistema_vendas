@@ -1,12 +1,13 @@
 <?php
-class VendaController {
-    private $table;
+class VendaController extends Controller {
     private static $instance;
     private $vendaRepository;
+    private $table = 'vendas';
+    private $request_fields = ['cliente', 'status'];
 
     public function __construct() {
-        $this->table = 'vendas';
         $this->vendaRepository = new VendaRepository();
+        parent::__construct($this->vendaRepository, $this->table, $this->request_fields);
     }
 
     public static function getInstance() {
@@ -14,26 +15,6 @@ class VendaController {
             self::$instance = new VendaController();
         }
         return self::$instance;
-    }
-
-    public function create($cliente, $status) {
-        return $this->vendaRepository->create($this->table, ['cliente' => $cliente, 'status' => $status]);
-    }
-
-    public function update($id, $cliente, $status) {
-        return $this->vendaRepository->update($this->table, $id, ['cliente' => $cliente, 'status' => $status]);
-    }
-
-    public function list() {
-        return $this->vendaRepository->list($this->table);
-    }
-
-    public function show($id) {
-        return $this->vendaRepository->show($this->table, $id);
-    }
-
-    public function delete($id) {
-        return $this->vendaRepository->delete($this->table, $id);
     }
 }
 

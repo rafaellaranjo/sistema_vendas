@@ -9,6 +9,7 @@ require_once '../src/models/Venda.php';
 require_once '../src/models/VendaProdutos.php';
 
 // controllers
+require_once '../src/controllers/Controller.php';
 require_once '../src/controllers/VendaController.php';
 require_once '../src/controllers/VendaProdutosController.php';
 require_once '../src/controllers/ProdutoController.php';
@@ -26,12 +27,6 @@ require_once '../src/repositories/VendaRepository.php';
 require_once '../src/repositories/VendaProdutosRepository.php';
 
 // routes
-require_once '../src/routes/usuario.routes.php';
-require_once '../src/routes/tipoProduto.routes.php';
-require_once '../src/routes/Produto.routes.php';
-require_once '../src/routes/percentualImpostos.routes.php';
-require_once '../src/routes/venda.routes.php';
-require_once '../src/routes/vendaProdutos.routes.php';
 require_once '../routes.php';
 
 Routes::route();

@@ -18,8 +18,11 @@ class Repository {
     }
 
     public function update($table, $id, $data) {
-        $setClause = '';
-        $values = [];
+        $currentDateTime = new DateTime();
+        $updated_at = $currentDateTime->format('Y-m-d H:i:s'); 
+        $setClause = 'updated_at = ?, ';
+        $values[] = $updated_at;
+
         foreach ($data as $key => $value) {
             $setClause .= "$key = ?, ";
             $values[] = $value;
