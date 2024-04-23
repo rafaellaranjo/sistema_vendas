@@ -12,6 +12,18 @@ class PercentualImpostoRepository  extends Repository {
         }
         return self::$instance;
     }
+
+    public function getImpostos($table, $tipo_produto_id) {
+        $db = Database::getInstance();
+        $conn = $db->getConnection();
+
+        $stmt = $conn->prepare("SELECT * FROM $table WHERE tipo_produto_id = ?");
+        $stmt->execute([$tipo_produto_id]);
+
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+        return $result;
+    }
 }
 
 ?>

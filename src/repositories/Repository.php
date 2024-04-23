@@ -47,17 +47,15 @@ class Repository {
             }
             $whereClause = rtrim($whereClause, 'AND ');
         }
-
+    
         $stmt = $this->db->prepare("SELECT * FROM $table $whereClause");
         $stmt->execute($values);
-
-        $result = [];
-        while ($row = $stmt->fetch()) {
-            $result[] = $row;
-        }
-
+    
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
         return $result;
     }
+    
 
     public function show($table, $id) {
         $stmt = $this->db->prepare("SELECT * FROM $table WHERE id = ?");

@@ -38,6 +38,9 @@ class Routes {
                 case 'GET':
                     if (isset($_GET['id'])) {
                         $instance->show();
+                        
+                    } else if (isset($_GET['venda_id'])) {
+                        $instance->getProdutosVenda();
                     } else {
                         $instance->list();
                     }

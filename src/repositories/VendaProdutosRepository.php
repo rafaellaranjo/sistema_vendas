@@ -12,6 +12,18 @@ class VendaProdutosRepository extends Repository {
         }
         return self::$instance;
     }
+
+    public function getProdutosVenda($table, $venda_id) {
+        $db = Database::getInstance();
+        $conn = $db->getConnection();
+
+        $stmt = $conn->prepare("SELECT * FROM $table WHERE venda_id = ?");
+        $stmt->execute([$venda_id]);
+
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+        return $result;
+    }
 }
 
 ?>

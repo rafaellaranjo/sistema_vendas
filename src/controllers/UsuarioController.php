@@ -17,9 +17,11 @@ class UsuarioController {
     }
 
     public function registrar() {
-        if (isset($_POST['username'], $_POST['password'])) {
-            $username = $_POST['username'];
-            $password = $_POST['password'];
+        $params = handleJsonRequest(['username', 'password']);
+
+        if (isset($params['username'], $params['password'])) {
+            $username = $params['username'];
+            $password = $params['password'];
 
             $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
             $userId = $this->usuarioRepository->create($this->table, ['username' => $username, 'password' => $hashedPassword]);
@@ -32,9 +34,11 @@ class UsuarioController {
     }
 
     public function login() {
-        if (isset($_POST['username'], $_POST['password'])) {
-            $username = $_POST['username'];
-            $password = $_POST['password'];
+        $params = handleJsonRequest(['username', 'password']);
+
+        if (isset($params['username'], $params['password'])) {
+            $username = $params['username'];
+            $password = $params['password'];
 
             $userId = $this->usuarioRepository->login($username, $password);
 

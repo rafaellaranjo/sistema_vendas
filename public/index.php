@@ -1,4 +1,13 @@
 <?php
+header("Access-Control-Allow-Origin: *");
+header('Access-Control-Allow-Origin: http://localhost:5173');
+header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    // Se sim, enviar cabeçalhos CORS e sair
+    http_response_code(200);
+    exit;
+}
 // models
 require_once '../src/models/Database.php';
 require_once '../src/models/Usuario.php';
@@ -25,6 +34,9 @@ require_once '../src/repositories/UsuarioRepository.php';
 require_once '../src/repositories/ProdutoRepository.php';
 require_once '../src/repositories/VendaRepository.php';
 require_once '../src/repositories/VendaProdutosRepository.php';
+
+// utils
+require_once '../src/utils/handleJsonRequest.php';
 
 // routes
 require_once '../routes.php';

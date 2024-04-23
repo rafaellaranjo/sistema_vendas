@@ -11,27 +11,14 @@ abstract class Controller {
     }
 
     public function create() {
-        $requestData = $this->validateRequestData($_POST, $this->fields);
-        if (!$requestData) {
-            $this->respondError(400, 'Parâmetros incompletos');
-            return;
-        }
-
-        $response = $this->repository->create($this->table, $requestData);
+        $params = handleJsonRequest($this->fields);
+        $response = $this->repository->create($this->table, $params);
         $this->respondSuccess(['id' => $response]);
     }
 
     public function update() {
-        $body = file_get_contents('php://input');
-        parse_str($body, $requestData);
-
-        $requestData = $this->validateRequestData($requestData, $this->fields);
-        if (!$requestData || !isset($requestData['id'])) {
-            $this->respondError(400, 'Parâmetros incompletos');
-            return;
-        }
-
-        $response = $this->repository->update($this->table, $requestData['id'], $requestData);
+        $params = handleJsonRequest($this->fields);
+        $response = $this->repository->update($this->table, $_GET['id'], $params);
         if ($response) {
             $this->respondSuccess(['success' => true]);
         } else {
